@@ -49,8 +49,8 @@ $support_number = $site_settings['support_number'] ?? '';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($site_name); ?> - Premium SMM Services</title>
-    <meta name="description" content="Premium SMM Panel - Social Media Marketing Services">
+    <title><?php echo htmlspecialchars($site_name); ?> - Premium <?php echo htmlspecialchars($site_name); ?> Services</title>
+    <meta name="description" content="Premium <?php echo htmlspecialchars($site_name); ?> - Social Media Marketing Services">
     <?php if ($site_favicon): ?>
         <link rel="icon" href="<?php echo htmlspecialchars($site_favicon); ?>" type="image/x-icon">
     <?php endif; ?>

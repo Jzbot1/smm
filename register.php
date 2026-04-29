@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - SMM Panel</title>
+    <title>Register - <?php echo htmlspecialchars($site_name); ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
             <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">
                 <?php echo htmlspecialchars($site_name); ?></h1>
-            <p class="text-slate-400 mt-2">Join our SMM Panel today</p>
+            <p class="text-slate-400 mt-2">Join our <?php echo htmlspecialchars($site_name); ?> today</p>
         </div>
         
         <?php if ($error): ?>

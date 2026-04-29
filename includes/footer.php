@@ -29,7 +29,7 @@
                 <div class="col-span-1 md:col-span-2">
                     <h2 class="text-xl font-bold text-white mb-4"><?php echo htmlspecialchars($site_name); ?></h2>
                     <p class="text-slate-400 text-sm max-w-sm mb-6">
-                        Welcome to <strong><?php echo htmlspecialchars($site_name); ?></strong>. The world's leading SMM Panel providing high-quality social media marketing services at the most affordable rates. Boost your presence today!
+                        Welcome to <strong><?php echo htmlspecialchars($site_name); ?></strong>. The world's leading <?php echo htmlspecialchars($site_name); ?> providing high-quality social media marketing services at the most affordable rates. Boost your presence today!
                     </p>
                     <div class="flex space-x-4">
                         <?php if (!empty($site_settings['facebook_url'])): ?>
