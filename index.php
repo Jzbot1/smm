@@ -159,7 +159,49 @@ $announcement = $stmt->fetch();
                 </div>
             </div>
 
-            <div id="service_desc" class="hidden p-5 rounded-2xl bg-indigo-500/5 border border-indigo-500/20 text-indigo-200/80 text-xs leading-relaxed italic">
+            <div id="service_details_container" class="hidden space-y-6 animate-in fade-in slide-in-from-top-4 duration-500">
+                <div class="group">
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 px-1">Service Description</label>
+                    <div id="service_desc" class="p-5 rounded-2xl bg-indigo-500/5 border border-indigo-500/20 text-indigo-200/80 text-xs leading-relaxed italic">
+                    </div>
+                </div>
+
+                <div class="p-6 rounded-2xl bg-slate-900/80 border border-slate-700/50 space-y-4 shadow-inner">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="text-indigo-400 text-[10px] font-black uppercase tracking-widest mb-2 flex items-center">
+                                <i class="fas fa-info-circle mr-1.5 opacity-70"></i> General Rules
+                            </h4>
+                            <ul class="text-[10px] text-slate-400 space-y-1.5 list-disc pl-3 font-medium">
+                                <li>Read service description carefully before ordering.</li>
+                                <li>Do not use multiple services on the same link at once.</li>
+                                <li>No refund for wrong link or private accounts.</li>
+                                <li>Final Count = Start Count + Quantity Ordered.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="text-indigo-400 text-[10px] font-black uppercase tracking-widest mb-2 flex items-center">
+                                <i class="fas fa-user-check mr-1.5 opacity-70"></i> Followers Rules
+                            </h4>
+                            <ul class="text-[10px] text-slate-400 space-y-1.5 list-disc pl-3 font-medium">
+                                <li>Account must be PUBLIC during the whole process.</li>
+                                <li>Disable "Flag for Review" in your IG settings.</li>
+                                <li>Standard drop rate is 3–5% (natural behavior).</li>
+                                <li>Refill won't work if username is changed.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <label class="flex items-center space-x-3 cursor-pointer group pt-4 border-t border-slate-800/50">
+                        <div class="relative">
+                            <input type="checkbox" id="terms_agree" class="peer hidden">
+                            <div class="w-5 h-5 border-2 border-slate-700 rounded-lg peer-checked:bg-indigo-600 peer-checked:border-indigo-600 transition-all flex items-center justify-center">
+                                <i class="fas fa-check text-[10px] text-white opacity-0 peer-checked:opacity-100"></i>
+                            </div>
+                        </div>
+                        <span class="text-xs font-bold text-slate-400 group-hover:text-slate-300 transition-colors">I agree to all terms and conditions</span>
+                    </label>
+                </div>
             </div>
 
             <div class="group">
@@ -180,7 +222,7 @@ $announcement = $stmt->fetch();
                 </div>
             </div>
 
-            <button type="submit" class="w-full btn-primary text-white font-bold py-5 rounded-2xl shadow-xl active:scale-[0.98] mt-4 flex items-center justify-center space-x-2">
+            <button type="submit" id="submit_btn" disabled class="w-full btn-primary text-white font-bold py-5 rounded-2xl shadow-xl active:scale-[0.98] mt-4 flex items-center justify-center space-x-2 opacity-50 cursor-not-allowed">
                 <span>Confirm Order</span>
                 <i class="fas fa-arrow-right text-xs"></i>
             </button>
@@ -219,16 +261,20 @@ $announcement = $stmt->fetch();
     const services = <?php echo json_encode($services); ?>;
     const categorySelect = document.getElementById('category');
     const serviceSelect = document.getElementById('service');
+    const detailsContainer = document.getElementById('service_details_container');
     const descBox = document.getElementById('service_desc');
     const quantityInput = document.getElementById('quantity');
     const chargeDisplay = document.getElementById('charge');
     const minMaxInfo = document.getElementById('min_max_info');
+    const termsCheck = document.getElementById('terms_agree');
+    const submitBtn = document.getElementById('submit_btn');
 
     categorySelect.addEventListener('change', function() {
         const catId = this.value;
         serviceSelect.innerHTML = '<option value="">Select Service...</option>';
-        descBox.classList.add('hidden');
+        detailsContainer.classList.add('hidden');
         chargeDisplay.innerText = '₹0.00';
+        updateSubmitState();
         
         services.filter(s => s.category_id == catId).forEach(s => {
             const opt = document.createElement('option');
@@ -240,6 +286,20 @@ $announcement = $stmt->fetch();
 
     serviceSelect.addEventListener('change', updateCharge);
     quantityInput.addEventListener('input', updateCharge);
+    termsCheck.addEventListener('change', updateSubmitState);
+
+    function updateSubmitState() {
+        const isAgreed = termsCheck.checked;
+        const hasService = serviceSelect.value !== '';
+        
+        if (isAgreed && hasService) {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        } else {
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+    }
 
     function updateCharge() {
         const serviceId = serviceSelect.value;
@@ -250,11 +310,10 @@ $announcement = $stmt->fetch();
             if (service) {
                 if (service.description) {
                     descBox.innerHTML = service.description.replace(/\n/g, '<br>');
-                    descBox.classList.remove('hidden');
                 } else {
-                    descBox.classList.add('hidden');
+                    descBox.innerHTML = '<span class="italic text-slate-500">No description available.</span>';
                 }
-
+                detailsContainer.classList.remove('hidden');
                 minMaxInfo.textContent = `Min: ${service.min} - Max: ${service.max}`;
                 
                 const rate = parseFloat(service.selling_price) / 1000;
@@ -262,10 +321,11 @@ $announcement = $stmt->fetch();
                 chargeDisplay.textContent = '₹' + charge.toFixed(2);
             }
         } else {
-            descBox.classList.add('hidden');
+            detailsContainer.classList.add('hidden');
             minMaxInfo.textContent = '';
             chargeDisplay.textContent = '₹0.00';
         }
+        updateSubmitState();
     }
 </script>
 
