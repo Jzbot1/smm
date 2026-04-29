@@ -41,31 +41,32 @@ if ($active_gateway === 'jzstore') {
     $gw_settings = JzstoreGateway::getSettings($db);
     $check = JzstoreGateway::checkOrderStatus($gw_settings, $clientTxnId);
     
-    $rawJzStatus = strtolower((string)($check['data']['status'] ?? $check['data']['data']['status'] ?? ''));
-    $status = in_array($rawJzStatus, ['success', 'completed', '1', 'true']) ? 'success' : 'failed';
-    // If the API boolean 'status' is true but there's a specific order status inside 'data'
-    if ($status === 'failed' && isset($check['data']['status']) && $check['data']['status'] === true) {
-        $innerStatus = strtolower((string)($check['data']['data']['status'] ?? ''));
-        $status = in_array($innerStatus, ['success', 'completed']) ? 'success' : 'failed';
-    }
-    // Also accept it if the top level status is exactly boolean true and no inner status exists
-    if ($status === 'failed' && isset($check['data']['status']) && $check['data']['status'] === true && !isset($check['data']['data']['status'])) {
-         $status = 'success';
+    // Jzstore often has status at top level or inside data/result
+    $rawJzStatus = strtolower((string)($check['data']['status'] ?? $check['data']['data']['status'] ?? $check['data']['result']['status'] ?? ''));
+    $status = in_array($rawJzStatus, ['success', 'completed', '1', 'true']) ? 'success' : $rawJzStatus;
+    
+    // If top level is boolean true but status string is different, double check
+    if ($status !== 'success' && isset($check['data']['status']) && $check['data']['status'] === true) {
+        $innerStatus = strtolower((string)($check['data']['data']['status'] ?? $check['data']['result']['status'] ?? ''));
+        if (in_array($innerStatus, ['success', 'completed'])) {
+            $status = 'success';
+        }
     }
     
-    $utr = (string)($check['data']['data']['utr'] ?? $check['data']['utr'] ?? '');
+    $utr = (string)($check['data']['data']['utr'] ?? $check['data']['result']['utr'] ?? $check['data']['utr'] ?? '');
 } else {
     $gw_settings = EkupiGateway::getSettings($db);
     $check = EkupiGateway::checkOrderStatus($gw_settings, $clientTxnId);
     
     // eKupi success statuses can be 'SUCCESS', 'COMPLETED', etc.
-    $rawStatus = strtolower((string)($check['data']['data']['status'] ?? ''));
-    $status = in_array($rawStatus, ['success', 'completed', 'success_scan', 'scan_pay']) ? 'success' : $rawStatus;
-    $utr = (string)($check['data']['data']['utr'] ?? '');
+    // Check both levels as some API versions vary
+    $rawStatus = strtolower((string)($check['data']['data']['status'] ?? $check['data']['status'] ?? ''));
+    $status = in_array($rawStatus, ['success', 'completed', 'success_scan', 'scan_pay', '1', 'true']) ? 'success' : $rawStatus;
+    $utr = (string)($check['data']['data']['utr'] ?? $check['data']['utr'] ?? '');
 }
 
 if (!$check['ok']) {
-    error_log("Payment Callback Error: Gateway check failed. " . ($check['error'] ?? 'Unknown error'));
+    error_log("Payment Callback Error: Gateway check failed for ID $clientTxnId. " . ($check['error'] ?? 'Unknown error'));
     header('Location: ' . BASE_URL . '/add_funds?status=failed');
     exit;
 }
@@ -76,8 +77,15 @@ if ($status === 'success') {
     exit;
 }
 
-error_log("Payment Callback: Order status is " . $status . " for ID: " . $clientTxnId);
-EkupiGateway::markFailed($db, $clientTxnId, json_encode($check['data']));
+// Log non-success status for debugging
+error_log("Payment Callback: Order status is [" . $status . "] for ID: " . $clientTxnId . ". Full Response: " . json_encode($check['data']));
+
+// ONLY mark as failed if the gateway explicitly says it failed. 
+// If it's 'pending', 'processing', etc., we just redirect without marking it failed in DB.
+if (in_array($status, ['failed', 'failure', 'rejected', 'canceled'])) {
+    EkupiGateway::markFailed($db, $clientTxnId, json_encode($check['data']));
+}
+
 header('Location: ' . BASE_URL . '/add_funds?status=failed');
 exit;
 
