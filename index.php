@@ -19,11 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $quantity = $_POST['quantity'] ?? 0;
 
     if ($service_id && $link && $quantity) {
-        $ch = curl_init(FULL_URL . '/api/v1/order');
-        
-        // Wait, the host might not be localhost/smm. It's better to implement order logic directly or via a shared class. Let's do it directly here for simplicity, or just include a helper.
-        // I will implement the logic directly to avoid curl issues on different hosts.
-        
         $stmt = $db->prepare("SELECT * FROM services WHERE id = ? AND status = 'active'");
         $stmt->execute([$service_id]);
         $service = $stmt->fetch();
@@ -62,8 +57,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $stmt->execute([$user['id'], $service_id, $api_order_id, $link, $quantity, $charge, $api_charge]);
 
                         $db->commit();
-                        $message = 'Order placed successfully!';
-                        $messageType = 'success';
+                        $_SESSION['flash_message'] = 'Order placed successfully!';
+                        $_SESSION['flash_type'] = 'success';
 
                         // Send Telegram Notification
                         Telegram::sendOrderNotification($db->lastInsertId(), $service['name'], $link, $quantity, $charge, $user['email']);
@@ -78,28 +73,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             'link' => $link
                         ]);
                         
-                        // refresh user balance
-                        $user['balance'] = $new_balance;
+                        header("Location: index");
+                        exit;
 
                     } catch (Exception $e) {
                         $db->rollBack();
-                        $message = $e->getMessage();
-                        $messageType = 'error';
+                        $_SESSION['flash_message'] = $e->getMessage();
+                        $_SESSION['flash_type'] = 'error';
+                        header("Location: index");
+                        exit;
                     }
                 } else {
-                    $message = 'Insufficient balance';
-                    $messageType = 'error';
+                    $_SESSION['flash_message'] = 'Insufficient balance';
+                    $_SESSION['flash_type'] = 'error';
+                    header("Location: index");
+                    exit;
                 }
             } else {
-                $message = "Quantity must be between {$service['min']} and {$service['max']}";
-                $messageType = 'error';
+                $_SESSION['flash_message'] = "Quantity must be between {$service['min']} and {$service['max']}";
+                $_SESSION['flash_type'] = 'error';
+                header("Location: index");
+                exit;
             }
         } else {
-            $message = 'Invalid service';
-            $messageType = 'error';
+            $_SESSION['flash_message'] = 'Invalid service';
+            $_SESSION['flash_type'] = 'error';
+            header("Location: index");
+            exit;
         }
     }
 }
+
+$message = $_SESSION['flash_message'] ?? '';
+$messageType = $_SESSION['flash_type'] ?? 'success';
+unset($_SESSION['flash_message'], $_SESSION['flash_type']);
+
 // Fetch latest active notification
 $stmt = $db->query("SELECT * FROM notifications WHERE status = 'active' ORDER BY id DESC LIMIT 1");
 $announcement = $stmt->fetch();

@@ -10,7 +10,7 @@
             ['orders.php', 'fas fa-shopping-basket', 'Orders'],
             ['services.php', 'fas fa-list-ul', 'Services'],
             ['add_funds.php', 'fas fa-wallet', 'Funds'],
-            ['tickets.php', 'fas fa-comment-alt', 'Support']
+            ['profile.php', 'fas fa-user-circle', 'Profile']
         ];
         foreach ($nav_links as $link):
             $active = ($current_page == $link[0]) ? 'text-indigo-400 bg-indigo-500/10' : 'text-slate-400';

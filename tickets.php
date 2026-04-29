@@ -9,16 +9,27 @@ $message = '';
 $messageType = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_ticket'])) {
-    $subject = $_POST['subject'] ?? '';
-    $msg = $_POST['message'] ?? '';
+    $subject = trim($_POST['subject'] ?? '');
+    $msg = trim($_POST['message'] ?? '');
 
     if ($subject && $msg) {
         $stmt = $db->prepare("INSERT INTO tickets (user_id, subject, message) VALUES (?, ?, ?)");
         $stmt->execute([$user['id'], $subject, $msg]);
-        $message = "Ticket created successfully! We will reply soon.";
-        $messageType = "success";
+        $_SESSION['flash_message'] = "Ticket created successfully! We will reply soon.";
+        $_SESSION['flash_type'] = "success";
+        header("Location: tickets");
+        exit;
+    } else {
+        $_SESSION['flash_message'] = "Please fill in all fields.";
+        $_SESSION['flash_type'] = "error";
+        header("Location: tickets");
+        exit;
     }
 }
+
+$message = $_SESSION['flash_message'] ?? '';
+$messageType = $_SESSION['flash_type'] ?? 'success';
+unset($_SESSION['flash_message'], $_SESSION['flash_type']);
 
 $stmt = $db->prepare("SELECT * FROM tickets WHERE user_id = ? ORDER BY created_at DESC");
 $stmt->execute([$user['id']]);
@@ -33,8 +44,8 @@ $tickets = $stmt->fetchAll();
 </div>
 
 <?php if ($message): ?>
-    <div class="p-4 rounded-xl mb-8 bg-green-500/10 border border-green-500/50 text-green-400">
-        <i class="fas fa-check-circle mr-2"></i> <?php echo htmlspecialchars($message); ?>
+    <div class="p-4 rounded-xl mb-8 <?php echo $messageType === 'success' ? 'bg-green-500/10 border-green-500/50 text-green-400' : 'bg-red-500/10 border-red-500/50 text-red-400'; ?>">
+        <i class="fas <?php echo $messageType === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'; ?> mr-2"></i> <?php echo htmlspecialchars($message); ?>
     </div>
 <?php endif; ?>
 

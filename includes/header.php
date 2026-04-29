@@ -138,6 +138,9 @@ $support_number = $site_settings['support_number'] ?? '';
                     <a href="<?php echo BASE_URL; ?>/add_funds" class="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white rounded-xl hover:bg-slate-800/50 transition-all">
                         Add Funds
                     </a>
+                    <a href="<?php echo BASE_URL; ?>/profile" class="px-4 py-2 text-sm font-medium text-slate-300 hover:text-white rounded-xl hover:bg-slate-800/50 transition-all">
+                        Profile
+                    </a>
                 </div>
 
                 <div class="flex items-center space-x-4">
