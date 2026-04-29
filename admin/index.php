@@ -44,49 +44,53 @@ $provider_currency = isset($balance_res->currency) ? $balance_res->currency : 'I
     </div>
 </div>
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-    <div class="glass p-6 rounded-3xl shadow-xl group hover:border-indigo-500/50 transition-all border border-slate-700/30">
-        <div class="flex items-center justify-between mb-4">
-            <div class="w-12 h-12 bg-blue-500/10 text-blue-400 rounded-2xl flex items-center justify-center">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+    <div class="glass p-6 rounded-[2rem] shadow-xl group hover:border-blue-500/50 transition-all duration-500 border border-slate-700/30 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-24 h-24 bg-blue-500/5 rounded-full -mr-8 -mt-8 blur-2xl group-hover:bg-blue-500/10 transition-colors"></div>
+        <div class="flex items-center justify-between mb-6">
+            <div class="w-12 h-12 bg-blue-500/10 text-blue-400 rounded-2xl flex items-center justify-center border border-blue-500/20 shadow-inner">
                 <i class="fas fa-users text-xl"></i>
             </div>
-            <span class="text-xs font-bold text-green-400 bg-green-500/10 px-2 py-1 rounded-lg">+12%</span>
+            <span class="text-[10px] font-black text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded-lg border border-blue-500/20 uppercase tracking-tighter">+12%</span>
         </div>
-        <h3 class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Total Users</h3>
-        <p class="text-3xl font-black text-white"><?php echo number_format($stats['users']); ?></p>
+        <h3 class="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">Total Users</h3>
+        <p class="text-3xl font-black text-white tracking-tight"><?php echo number_format($stats['users']); ?></p>
     </div>
 
-    <div class="glass p-6 rounded-3xl shadow-xl group hover:border-indigo-500/50 transition-all border border-slate-700/30">
-        <div class="flex items-center justify-between mb-4">
-            <div class="w-12 h-12 bg-indigo-500/10 text-indigo-400 rounded-2xl flex items-center justify-center">
+    <div class="glass p-6 rounded-[2rem] shadow-xl group hover:border-indigo-500/50 transition-all duration-500 border border-slate-700/30 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-24 h-24 bg-indigo-500/5 rounded-full -mr-8 -mt-8 blur-2xl group-hover:bg-indigo-500/10 transition-colors"></div>
+        <div class="flex items-center justify-between mb-6">
+            <div class="w-12 h-12 bg-indigo-500/10 text-indigo-400 rounded-2xl flex items-center justify-center border border-indigo-500/20 shadow-inner">
                 <i class="fas fa-shopping-cart text-xl"></i>
             </div>
-            <span class="text-xs font-bold text-indigo-400 bg-indigo-500/10 px-2 py-1 rounded-lg">+5%</span>
+            <span class="text-[10px] font-black text-indigo-400 bg-indigo-500/10 px-2.5 py-1 rounded-lg border border-indigo-500/20 uppercase tracking-tighter">+5%</span>
         </div>
-        <h3 class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Total Orders</h3>
-        <p class="text-3xl font-black text-white"><?php echo number_format($stats['orders']); ?></p>
+        <h3 class="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">Total Orders</h3>
+        <p class="text-3xl font-black text-white tracking-tight"><?php echo number_format($stats['orders']); ?></p>
     </div>
 
-    <div class="glass p-6 rounded-3xl shadow-xl group hover:border-indigo-500/50 transition-all border border-slate-700/30">
-        <div class="flex items-center justify-between mb-4">
-            <div class="w-12 h-12 bg-green-500/10 text-green-400 rounded-2xl flex items-center justify-center">
-                <i class="fas fa-money-bill-wave text-xl"></i>
+    <div class="glass p-6 rounded-[2rem] shadow-xl group hover:border-emerald-500/50 transition-all duration-500 border border-slate-700/30 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full -mr-8 -mt-8 blur-2xl group-hover:bg-emerald-500/10 transition-colors"></div>
+        <div class="flex items-center justify-between mb-6">
+            <div class="w-12 h-12 bg-emerald-500/10 text-emerald-400 rounded-2xl flex items-center justify-center border border-emerald-500/20 shadow-inner">
+                <i class="fas fa-wallet text-xl"></i>
             </div>
-            <span class="text-xs font-bold text-green-400 bg-green-500/10 px-2 py-1 rounded-lg">LIVE</span>
+            <span class="text-[10px] font-black text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20 uppercase tracking-tighter">LIVE</span>
         </div>
-        <h3 class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Total Revenue</h3>
-        <p class="text-3xl font-black text-white">₹<?php echo number_format($stats['revenue'], 2); ?></p>
+        <h3 class="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">Total Revenue</h3>
+        <p class="text-3xl font-black text-white tracking-tight">₹<?php echo number_format($stats['revenue'], 2); ?></p>
     </div>
 
-    <div class="glass p-6 rounded-3xl shadow-xl group hover:border-indigo-500/50 transition-all border border-slate-700/30">
-        <div class="flex items-center justify-between mb-4">
-            <div class="w-12 h-12 bg-purple-500/10 text-purple-400 rounded-2xl flex items-center justify-center">
+    <div class="glass p-6 rounded-[2rem] shadow-xl group hover:border-purple-500/50 transition-all duration-500 border border-slate-700/30 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-24 h-24 bg-purple-500/5 rounded-full -mr-8 -mt-8 blur-2xl group-hover:bg-purple-500/10 transition-colors"></div>
+        <div class="flex items-center justify-between mb-6">
+            <div class="w-12 h-12 bg-purple-500/10 text-purple-400 rounded-2xl flex items-center justify-center border border-purple-500/20 shadow-inner">
                 <i class="fas fa-chart-line text-xl"></i>
             </div>
-            <span class="text-xs font-bold text-purple-400 bg-purple-500/10 px-2 py-1 rounded-lg">EST</span>
+            <span class="text-[10px] font-black text-purple-400 bg-purple-500/10 px-2.5 py-1 rounded-lg border border-purple-500/20 uppercase tracking-tighter">EST</span>
         </div>
-        <h3 class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">Net Profit</h3>
-        <p class="text-3xl font-black text-white">₹<?php echo number_format($stats['profit'], 2); ?></p>
+        <h3 class="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">Net Profit</h3>
+        <p class="text-3xl font-black text-white tracking-tight">₹<?php echo number_format($stats['profit'], 2); ?></p>
     </div>
 </div>
 
