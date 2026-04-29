@@ -106,7 +106,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     class="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors">
             </div>
             <div class="mb-6">
-                <label class="block text-sm font-medium text-slate-300 mb-2">Password</label>
+                <div class="flex justify-between items-center mb-2">
+                    <label class="block text-sm font-medium text-slate-300">Password</label>
+                    <a href="<?php echo BASE_URL; ?>/forgot_password.php" class="text-xs text-indigo-400 hover:text-indigo-300 transition-colors">Forgot Password?</a>
+                </div>
                 <input type="password" name="password" required
                     class="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors">
             </div>

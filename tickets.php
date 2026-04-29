@@ -17,12 +17,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_ticket'])) {
         $stmt->execute([$user['id'], $subject, $msg]);
         $_SESSION['flash_message'] = "Ticket created successfully! We will reply soon.";
         $_SESSION['flash_type'] = "success";
-        header("Location: tickets");
+        header("Location: tickets.php");
         exit;
     } else {
         $_SESSION['flash_message'] = "Please fill in all fields.";
         $_SESSION['flash_type'] = "error";
-        header("Location: tickets");
+        header("Location: tickets.php");
         exit;
     }
 }

@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
         $_SESSION['flash_message'] = 'Current password is incorrect.';
         $_SESSION['flash_type'] = 'error';
     }
-    header("Location: profile");
+    header("Location: profile.php");
     exit;
 }
 

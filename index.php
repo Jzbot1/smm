@@ -56,49 +56,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $stmt = $db->prepare("INSERT INTO orders (user_id, service_id, api_order_id, link, quantity, charge, api_charge, status) VALUES (?, ?, ?, ?, ?, ?, ?, 'Pending')");
                         $stmt->execute([$user['id'], $service_id, $api_order_id, $link, $quantity, $charge, $api_charge]);
 
+                        $order_id = $db->lastInsertId();
                         $db->commit();
                         $_SESSION['flash_message'] = 'Order placed successfully!';
                         $_SESSION['flash_type'] = 'success';
 
                         // Send Telegram Notification
-                        Telegram::sendOrderNotification($db->lastInsertId(), $service['name'], $link, $quantity, $charge, $user['email']);
+                        Telegram::sendOrderNotification($order_id, $service['name'], $link, $quantity, $charge, $user['email']);
 
                         // Send Email Invoice
                         require_once 'includes/Mailer.php';
                         Mailer::sendInvoice($user['email'], [
-                            'id' => $db->lastInsertId(),
+                            'id' => $order_id,
                             'service_name' => $service['name'],
                             'quantity' => $quantity,
                             'charge' => $charge,
                             'link' => $link
                         ]);
                         
-                        header("Location: index");
+                        header("Location: index.php");
                         exit;
 
-                    } catch (Exception $e) {
+                    } catch (Throwable $e) {
                         $db->rollBack();
-                        $_SESSION['flash_message'] = $e->getMessage();
+                        $_SESSION['flash_message'] = "Error: " . $e->getMessage();
                         $_SESSION['flash_type'] = 'error';
-                        header("Location: index");
+                        header("Location: index.php");
                         exit;
                     }
                 } else {
                     $_SESSION['flash_message'] = 'Insufficient balance';
                     $_SESSION['flash_type'] = 'error';
-                    header("Location: index");
+                    header("Location: index.php");
                     exit;
                 }
             } else {
                 $_SESSION['flash_message'] = "Quantity must be between {$service['min']} and {$service['max']}";
                 $_SESSION['flash_type'] = 'error';
-                header("Location: index");
+                header("Location: index.php");
                 exit;
             }
         } else {
             $_SESSION['flash_message'] = 'Invalid service';
             $_SESSION['flash_type'] = 'error';
-            header("Location: index");
+            header("Location: index.php");
             exit;
         }
     }

@@ -1,5 +1,6 @@
 <?php
 // config/config.php
+ob_start();
 
 // Auto-detect Base URL or set manually
 $script_name = $_SERVER['SCRIPT_NAME'] ?? '';

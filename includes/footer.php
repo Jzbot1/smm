@@ -71,7 +71,7 @@
                 <div class="mb-4 md:mb-0 text-center md:text-left">
                     <p>&copy; <?php echo date('Y'); ?> <?php echo htmlspecialchars($site_name); ?>. All rights reserved.</p>
                     <p class="mt-1">
-                        Professional SMM Solutions
+                        Designed and Developed by <a href="https://wa.me/918730063275" target="_blank" class="text-indigo-400 hover:text-indigo-300 transition-colors font-semibold">Zomuana Sailo</a>
                     </p>
                 </div>
                 <div class="flex space-x-4">
