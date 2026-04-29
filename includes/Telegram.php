@@ -17,13 +17,13 @@ class Telegram {
             return false;
         }
 
-        $text = "🔔 *New Order Received*\n\n" .
-                "🛒 *Order ID:* #$orderId\n" .
-                "👤 *User:* $userEmail\n" .
-                "📦 *Service:* $serviceName\n" .
-                "🔗 *Link:* $link\n" .
-                "🔢 *Quantity:* $quantity\n" .
-                "💰 *Charge:* $" . number_format($charge, 4);
+        $text = "<b>🔔 New Order Received</b>\n\n" .
+                "<b>🛒 Order ID:</b> #$orderId\n" .
+                "<b>👤 User:</b> " . htmlspecialchars($userEmail) . "\n" .
+                "<b>📦 Service:</b> " . htmlspecialchars($serviceName) . "\n" .
+                "<b>🔗 Link:</b> " . htmlspecialchars($link) . "\n" .
+                "<b>🔢 Quantity:</b> $quantity\n" .
+                "<b>💰 Charge:</b> ₹" . number_format($charge, 2);
 
         return self::sendMessage($botToken, $chatId, $text);
     }
@@ -46,6 +46,7 @@ class Telegram {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
         $response = curl_exec($ch);
         curl_close($ch);
         
@@ -64,12 +65,12 @@ class Telegram {
         $chatId = $settings['telegram_chat_id'] ?? '';
 
         if (empty($botToken) || empty($chatId)) {
-            return ['error' => 'Bot token or Chat ID not set'];
+            return json_encode(['ok' => false, 'description' => 'Bot token or Chat ID not set']);
         }
 
-        $text = "🚀 *Telegram Test Notification*\n\n" .
+        $text = "🚀 <b>Telegram Test Notification</b>\n\n" .
                 "This is a demo notification from your SMM Panel admin area.\n\n" .
-                "✅ *Status:* Bot is connected successfully!";
+                "✅ <b>Status:</b> Bot is connected successfully!";
 
         return self::sendMessage($botToken, $chatId, $text);
     }
@@ -80,7 +81,8 @@ class Telegram {
         $data = [
             'chat_id' => $chatId,
             'text' => $text,
-            'parse_mode' => 'Markdown'
+            'parse_mode' => 'HTML',
+            'disable_web_page_preview' => true
         ];
 
         $ch = curl_init($url);
@@ -88,6 +90,7 @@ class Telegram {
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
         $response = curl_exec($ch);
         curl_close($ch);
         
