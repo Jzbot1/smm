@@ -80,6 +80,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($redirectUrl === '') {
             $message = 'Gateway is not properly configured (missing redirect URL).';
         } else {
+            // Append client_txn_id to redirect URL to ensure it's available on callback
+            $redirectUrl .= (strpos($redirectUrl, '?') !== false ? '&' : '?') . 'client_txn_id=' . $clientTxnId;
+            
             $payload = [
                 'user_id' => $user['id'],
                 'client_txn_id' => $clientTxnId,

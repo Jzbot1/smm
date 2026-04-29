@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/config/config.php';
 require_once __DIR__ . '/config/database.php';
 require_once __DIR__ . '/includes/EkupiGateway.php';
 require_once __DIR__ . '/includes/JzstoreGateway.php';
@@ -21,7 +22,7 @@ $active_gateway = $all_settings['active_gateway'] ?? 'ekupi';
 $clientTxnId = trim((string)($_GET['client_txn_id'] ?? $_POST['client_txn_id'] ?? $_GET['order_id'] ?? $_GET['txn_id'] ?? ''));
 
 if ($clientTxnId === '') {
-    error_log("Payment Callback Error: Missing client_txn_id. GET: " . json_encode($_GET));
+    error_log("Payment Callback Error: Missing client_txn_id. GET: " . json_encode($_GET) . " POST: " . json_encode($_POST));
     header('Location: ' . BASE_URL . '/add_funds?status=failed');
     exit;
 }
