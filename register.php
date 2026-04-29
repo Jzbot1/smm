@@ -12,11 +12,15 @@ if (isset($_SESSION['user_id'])) {
 $db = Database::getInstance();
 $error = '';
 
-// Fetch Site Name
-$stmt = $db->query("SELECT setting_value FROM settings WHERE setting_key = 'site_name'");
-$site_name = $stmt->fetchColumn() ?: 'SMM Panel';
-$stmt = $db->query("SELECT setting_value FROM settings WHERE setting_key = 'site_favicon'");
-$site_favicon = $stmt->fetchColumn() ?: '';
+// Fetch Site Settings
+$stmt = $db->query("SELECT setting_key, setting_value FROM settings WHERE setting_key IN ('site_name', 'site_logo', 'site_favicon')");
+$settings = [];
+foreach ($stmt->fetchAll() as $row) {
+    $settings[$row['setting_key']] = $row['setting_value'];
+}
+$site_name = $settings['site_name'] ?? 'SMM Panel';
+$site_logo = $settings['site_logo'] ?? '';
+$site_favicon = $settings['site_favicon'] ?? '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = trim($_POST['name'] ?? '');
@@ -62,7 +66,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body class="min-h-screen flex items-center justify-center p-4">
     <div class="glass p-8 rounded-2xl w-full max-w-md shadow-2xl">
         <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">Create Account</h1>
+            <?php if ($site_logo): ?>
+                <div class="flex justify-center mb-6">
+                    <img src="<?php echo htmlspecialchars($site_logo); ?>" alt="<?php echo htmlspecialchars($site_name); ?>" class="h-12 w-auto object-contain">
+                </div>
+            <?php else: ?>
+                <div class="flex justify-center mb-6">
+                    <div class="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-600/20">
+                        <i class="fas fa-bolt text-xl"></i>
+                    </div>
+                </div>
+            <?php endif; ?>
+            <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">
+                <?php echo htmlspecialchars($site_name); ?></h1>
             <p class="text-slate-400 mt-2">Join our SMM Panel today</p>
         </div>
         
