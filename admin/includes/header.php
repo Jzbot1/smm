@@ -1,5 +1,5 @@
 <?php
-// admin/includes/header.php
+// admin/includes/header.php - Updated: 2026-04-29
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../../includes/Auth.php';
 
