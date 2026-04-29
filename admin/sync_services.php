@@ -29,6 +29,7 @@ if (isset($_POST['sync_services'])) {
             $min = $service->min;
             $max = $service->max;
             $type = $service->type;
+            $description = $service->desc ?? $service->description ?? '';
 
             // Find or Create Category
             $stmt = $db->prepare("SELECT id FROM categories WHERE name = ?");
@@ -50,11 +51,11 @@ if (isset($_POST['sync_services'])) {
             $existing_id = $stmt->fetchColumn();
 
             if ($existing_id) {
-                $stmt = $db->prepare("UPDATE services SET name = ?, category_id = ?, api_rate = ?, selling_price = ?, min = ?, max = ?, type = ? WHERE id = ?");
-                $stmt->execute([$name, $category_id, $rate, $selling_price, $min, $max, $type, $existing_id]);
+                $stmt = $db->prepare("UPDATE services SET name = ?, category_id = ?, api_rate = ?, selling_price = ?, min = ?, max = ?, type = ?, description = ? WHERE id = ?");
+                $stmt->execute([$name, $category_id, $rate, $selling_price, $min, $max, $type, $description, $existing_id]);
             } else {
-                $stmt = $db->prepare("INSERT INTO services (api_service_id, category_id, name, type, api_rate, selling_price, min, max, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'active')");
-                $stmt->execute([$api_id, $category_id, $name, $type, $rate, $selling_price, $min, $max]);
+                $stmt = $db->prepare("INSERT INTO services (api_service_id, category_id, name, type, api_rate, selling_price, min, max, description, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'active')");
+                $stmt->execute([$api_id, $category_id, $name, $type, $rate, $selling_price, $min, $max, $description]);
             }
         }
 
