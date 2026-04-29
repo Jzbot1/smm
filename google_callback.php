@@ -24,8 +24,11 @@ $clientId = $settings['google_client_id'];
 $clientSecret = $settings['google_client_secret'];
 $redirectUri = FULL_URL . '/google_callback';
 
-if (Auth::handleGoogleCallback($code, $clientId, $clientSecret, $redirectUri)) {
+$res = Auth::handleGoogleCallback($code, $clientId, $clientSecret, $redirectUri);
+if ($res === true) {
     header("Location: index");
+} elseif ($res === 'blocked') {
+    header("Location: login?error=blocked");
 } else {
     header("Location: login?error=google_failed");
 }

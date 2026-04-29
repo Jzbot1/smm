@@ -26,17 +26,24 @@ $site_name = $settings['site_name'] ?? 'SMM Panel';
 $site_logo = $settings['site_logo'] ?? '';
 $site_favicon = $settings['site_favicon'] ?? '';
 
+if (isset($_GET['error']) && $_GET['error'] === 'blocked') {
+    $error = 'Your account has been blocked. Please contact support.';
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
 
-    if (Auth::login($email, $password)) {
+    $login_result = Auth::login($email, $password);
+    if ($login_result === true) {
         if ($_SESSION['role'] === 'admin') {
             header("Location: " . BASE_URL . "/admin/index");
         } else {
             header("Location: " . BASE_URL . "/index");
         }
         exit;
+    } elseif ($login_result === 'blocked') {
+        $error = 'Your account has been blocked. Please contact support.';
     } else {
         $error = 'Invalid email or password';
     }

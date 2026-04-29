@@ -4,24 +4,13 @@ require_once 'config/database.php';
 try {
     $db = Database::getInstance();
     
-    echo "Fixing database schema...<br>";
+    echo "Updating database schema...<br>";
     
-    // Disable foreign key checks temporarily
-    $db->exec("SET FOREIGN_KEY_CHECKS = 0");
+    // Add status column to users table if it doesn't exist
+    $db->exec("ALTER TABLE `users` ADD COLUMN IF NOT EXISTS `status` ENUM('Active', 'Blocked') DEFAULT 'Active'");
+    echo "Successfully added 'status' column to users table.<br>";
     
-    // If there's a category with ID 0, update it to 1 (if 1 doesn't exist) or just delete it
-    // since this is likely a failed sync.
-    $db->exec("DELETE FROM categories WHERE id = 0");
-    echo "Removed invalid category entries with ID 0.<br>";
-    
-    // Fix categories table
-    $db->exec("ALTER TABLE categories MODIFY id INT AUTO_INCREMENT");
-    echo "Successfully added AUTO_INCREMENT to categories table.<br>";
-    
-    // Re-enable foreign key checks
-    $db->exec("SET FOREIGN_KEY_CHECKS = 1");
-    
-    echo "<br><b>Database fix complete!</b> You can now delete this file and try syncing again.";
+    echo "<br><b>Database update complete!</b> You can now delete this file.";
 } catch (Exception $e) {
     echo "Error: " . $e->getMessage();
 }

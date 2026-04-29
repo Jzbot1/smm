@@ -67,6 +67,10 @@ class Auth {
             $stmt->execute([$user_id]);
             $user = $stmt->fetch();
         }
+
+        if (($user['status'] ?? 'Active') === 'Blocked') {
+            return 'blocked';
+        }
         
         self::startSession();
         $_SESSION['user_id'] = $user['id'];
@@ -98,6 +102,9 @@ class Auth {
         $user = $stmt->fetch();
 
         if ($user && password_verify($password, $user['password'])) {
+            if (($user['status'] ?? 'Active') === 'Blocked') {
+                return 'blocked';
+            }
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['role'] = $user['role'];
             return true;
