@@ -267,7 +267,6 @@ $site_url = $protocol . '://' . $host . $base_path;
                     <input type="url" name="ekupi_redirect_url" value="<?php echo htmlspecialchars($settings['ekupi_redirect_url'] ?? $site_url . '/payment_callback.php'); ?>" class="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-indigo-500">
                 </div>
             </div>
-            </div>
         </div>
 
         <!-- Google Auth Configuration -->
@@ -296,7 +295,7 @@ $site_url = $protocol . '://' . $host . $base_path;
                 </div>
                 <div class="md:col-span-2 p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-xl">
                     <p class="text-[10px] text-slate-400 font-bold uppercase mb-2">Redirect URI (Use this in Google Console):</p>
-                    <code class="text-xs text-indigo-400 font-mono break-all"><?php echo FULL_URL; ?>/google_callback</code>
+                    <code class="text-xs text-indigo-400 font-mono break-all"><?php echo FULL_URL; ?>/google_callback.php</code>
                 </div>
             </div>
         </div>

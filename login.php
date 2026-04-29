@@ -127,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if (($g_settings['google_auth_enabled'] ?? '0') === '1' && !empty($g_settings['google_client_id'])):
-            $googleLoginUrl = Auth::getGoogleLoginUrl($g_settings['google_client_id'], FULL_URL . '/google_callback');
+            $googleLoginUrl = Auth::getGoogleLoginUrl($g_settings['google_client_id'], FULL_URL . '/google_callback.php');
         ?>
             <div class="relative my-8">
                 <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-700"></div></div>
@@ -140,7 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </a>
         <?php endif; ?>
         <p class="mt-6 text-center text-sm text-slate-400">
-            Don't have an account? <a href="<?php echo BASE_URL; ?>/register" class="text-indigo-400 hover:text-indigo-300">Sign up</a>
+            Don't have an account? <a href="<?php echo BASE_URL; ?>/register.php" class="text-indigo-400 hover:text-indigo-300">Sign up</a>
         </p>
     </div>
 </body>
