@@ -392,8 +392,6 @@ $site_url = $protocol . '://' . $host . $base_path;
         </div>
     </form>
 </div>
-    </form>
-</div>
 
 <?php require_once 'includes/footer.php'; ?>
 
