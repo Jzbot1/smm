@@ -22,7 +22,7 @@ if (!$code) {
 
 $clientId = $settings['google_client_id'];
 $clientSecret = $settings['google_client_secret'];
-$redirectUri = FULL_URL . '/google_callback';
+$redirectUri = FULL_URL . '/google_callback.php';
 
 $res = Auth::handleGoogleCallback($code, $clientId, $clientSecret, $redirectUri);
 if ($res === true) {
